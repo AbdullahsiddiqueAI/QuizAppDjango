@@ -47,7 +47,13 @@
          </a>
       {% endfor %}
    </div>
+ 
+   {% if progress >= 50 %}
+    <a href="/exam" class="inline-btn">Attempt Quiz</a>
+{% else %}
+    <a href="javascript:void(0);" class="inline-btn disabled" aria-disabled="true">Attempt Quiz</a>
+    <p>You need to complete at least 50% of the course to attempt the quiz.</p>
+{% endif %}
 
-   <a href="/exam" class="inline-btn">Attempt Quiz</a>
 </section>
 {% endblock %}

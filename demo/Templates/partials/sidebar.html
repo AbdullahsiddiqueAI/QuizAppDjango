@@ -1,7 +1,7 @@
 {% load static %}
 
 {% if user.is_authenticated %}
-<div class="side-bar">
+<div class="side-bar" style="overflow-y: scroll;">
 
     <div id="close-btn">
        <i class="fas fa-times"></i>
@@ -21,6 +21,7 @@
        <a href="/course_detail"><i class="fas fa-graduation-cap"></i><span>All courses</span></a> 
        <!-- <a href="/courses"><i class="fas fa-graduation-cap"></i><span>courses</span></a>  -->
        <a href="/contact"><i class="fas fa-headset"></i><span>contact us</span></a>
+       <a href="/cerificate"><i class="fas fa-file-alt"></i><span>certifcate</span></a>
        <a href="/exam"><i class="fas fa-file-alt"></i><span>exam</span></a>
     </nav>
  

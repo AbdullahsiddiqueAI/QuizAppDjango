@@ -29,8 +29,9 @@ urlpatterns = [
     path(r'certificate/', views.certificate, name='certiicate'),
     path('enroll_course/', views.enroll_course_without_id, name='enroll_course_no_id'),  # Without ID
     path('enroll_course/<int:id>/', views.enroll_course_with_id, name='enroll_course'),  # With ID
-     path('my_courses/', views.my_courses, name='my_courses'),
-     
+    path('my_courses/', views.my_courses, name='my_courses'),
+    path('mark_video_half_watched/<int:lesson_id>/', views.mark_video_half_watched, name='mark_video_half_watched'),
+
     path(r'search_result/', views.search_result, name='search_result'),
     path(r'course_detail/', views.course_detail, name='course_detail'),
     path('course_detail/<int:id>/', views.course_detail, name='course_detail'),

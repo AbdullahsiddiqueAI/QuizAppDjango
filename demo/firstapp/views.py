@@ -111,6 +111,10 @@ def playlist(request):
 def course_playlist(request, id):
     # Get the course by ID
     selected_course = get_object_or_404(Course, id=id)
+    progress=0
+    if CourseEnrollment.objects.filter(user=request.user, course=selected_course).first():
+        progress=CourseEnrollment.objects.filter(user=request.user, course=selected_course).first().progress
+    
     
     # Fetch all lessons associated with the course
     lessons = selected_course.lessons.all().order_by('order')  # Or adjust ordering based on your needs
@@ -118,9 +122,10 @@ def course_playlist(request, id):
     # Render the playlist template, passing the course and lessons
     return render(request, 'course_playlist.html', {
         'selected_course': selected_course,
-        'lessons': lessons
+        'lessons': lessons,
+        "progress": progress,
     })
-
+ 
 @login_required
 def profile(request):
     return render(request, 'profile.html', {'user': request.user})
@@ -153,6 +158,21 @@ def watch_video(request, id):
     return render(request, 'watch-video.html', context)
 
 
+@login_required
+def mark_video_half_watched(request, lesson_id):
+    if request.method == 'POST':
+        lesson = get_object_or_404(Lesson, id=lesson_id)
+        enrollment, created = CourseEnrollment.objects.get_or_create(user=request.user, course=lesson.course)   
+        # Mark lesson as completed at 50% if it’s not already marked
+        if lesson not in enrollment.completed_lessons.all():
+            enrollment.completed_lessons.add(lesson)
+            lesson.completed = True
+            lesson.save()
+            enrollment.update_progress()  # Update course progress
+            return JsonResponse({"message": "Lesson marked as 50% watched and progress updated."}, status=200)  
+        return JsonResponse({"message": "Lesson already marked as completed."}, status=200)
+
+    return JsonResponse({"error": "Invalid request method."}, status=400)
 
 
 @login_required
@@ -245,6 +265,7 @@ def update_profile(request):
 def enroll_course_with_id(request, id):
     # Fetch the specific course by ID
     selected_course = get_object_or_404(Course, id=id)
+  
 
     # Check if the user is already enrolled in this course
     if CourseEnrollment.objects.filter(user=request.user, course=selected_course).exists():
@@ -268,11 +289,12 @@ def enroll_course_with_id(request, id):
         # Show a success message
         messages.success(request, "You have successfully enrolled in the course.")
         return redirect('my_courses')  # Redirect to the course dashboard or another page
-
+   
     # Render the template with the selected course only
     return render(request, 'enroll_course.html', {
         'selected_course': selected_course,
-        'user': request.user
+        'user': request.user,
+        
     })
 
 
@@ -307,3 +329,20 @@ def my_courses(request):
     # Fetch courses where the user is enrolled
     enrolled_courses = CourseEnrollment.objects.filter(user=request.user).select_related('course')
     return render(request, 'my_courses.html', {'enrolled_courses': enrolled_courses})
+
+@login_required
+def quiz_detail(request, quiz_id):
+    quiz = Quiz.objects.get(id=quiz_id)
+
+    # Check if the user is enrolled in the course for this quiz
+    course_enrollment = CourseEnrollment.objects.filter(user=request.user, course=quiz.course).first()
+
+    if not course_enrollment:
+        return HttpResponse("You are not enrolled in this course.")
+
+    # Check if the course progress is above 50%
+    if course_enrollment.progress < 50:
+        messages.error(request, "You need to complete at least 50% of the course before attempting the quiz.")
+        return redirect('course_detail', course_id=quiz.course.id)  # Redirect to course detail or playlist
+
+    return render(request, 'quiz_detail.html', {'quiz': quiz})

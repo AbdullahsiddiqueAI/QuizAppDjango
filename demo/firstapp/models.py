@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.auth import get_user_model  # To get the custom user model
 from django.utils.translation import gettext_lazy as _
-
+from django.utils import timezone
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         """Creates and returns a user with an email, password, and other fields."""
@@ -101,23 +101,29 @@ class Question(models.Model):
         return f"Question: {self.text}"
 
 class CourseEnrollment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='enrollments')
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollments')
-    enrolled_at = models.DateTimeField(auto_now_add=True)
-    completed_at = models.DateTimeField(null=True, blank=True)
-    is_completed = models.BooleanField(default=False)
-    progress = models.FloatField(default=0.0)  # Represents completion percentage
-
-    def __str__(self):
-        return f"{self.user.email} - {self.course.title}"
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course,related_name="CourseEnrollment", on_delete=models.CASCADE)
+    completed_lessons = models.ManyToManyField(Lesson, blank=True)
+    enrolled_at = models.DateField(auto_now_add=True)
+    progress = models.FloatField(default=0.0)
 
     def update_progress(self):
-        """Update the user's progress in the course."""
-        lessons = self.course.lessons.all()
-        completed_lessons = lessons.filter(completed=True).count()  # Assuming completed is a boolean field on Lesson
-        total_lessons = lessons.count()
-        self.progress = (completed_lessons / total_lessons) * 100 if total_lessons else 0
+        total_lessons = self.course.lessons.count()
+        completed_count = self.completed_lessons.count()
+        if total_lessons > 0:
+            self.progress = (completed_count / total_lessons) * 100
+        else:
+            self.progress = 0
         self.save()
+
+    def save(self, *args, **kwargs):
+        if not self.enrolled_at:
+            self.enrolled_at = timezone.now().date()  # Explicitly set if needed
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.course.title}"
+
 
 class QuizAttempt(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

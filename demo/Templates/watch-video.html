@@ -12,7 +12,7 @@
    <div class="video-container">
       <div class="video">
           {% if lesson.video_file %}
-              <video src="{{ lesson.video_file.url }}" controls poster="{{ lesson.thumbnail_image.url }}" id="video" ></video>
+              <video id="videoPlayer" src="{{ lesson.video_file.url }}" controls poster="{{ lesson.thumbnail_image.url }}" id="video" ></video>
           {% else %}
               <p class="video-placeholder">Video is not available at this time.</p>
           {% endif %}
@@ -153,6 +153,38 @@
    </div>
 
 </section>
+
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+      const video = document.getElementById('videoPlayer');
+      let halfwayMarked = false;
+      
+   
+      video.addEventListener('timeupdate', function () {
+          const halfwayPoint = video.duration * 0.5;
+   
+          // Check if user has watched 50% of the video
+          if (video.currentTime >= halfwayPoint && !halfwayMarked) {
+              halfwayMarked = true;  // Prevent further requests after reaching 50%
+   
+              // AJAX request to mark the lesson as 50% watched
+              fetch("{% url 'mark_video_half_watched' lesson.id %}", {
+                  method: "POST",
+                  headers: {
+                      "X-CSRFToken": "{{ csrf_token }}",  // CSRF token for POST request
+                      "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({}),
+              })
+              .then(response => response.json())
+              .then(data => {
+                  console.log(data.message);  // Handle success message
+              })
+              .catch(error => console.error("Error:", error));
+          }
+      });
+   });
+   </script>
 
 
 

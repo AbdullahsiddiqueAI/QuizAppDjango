@@ -1477,43 +1477,55 @@ body.active {
    border-radius: 10px;
 }
 
-/* Circular Progress Bar */
-.progress-circle {
+
+
+
+.donut-chart {
+   margin: auto;
    position: relative;
+   width: 100px;
+   height: 100px;
+   border-radius: 50%;
+   background: conic-gradient(#4caf50 var(--progress), #e6e6e6 var(--progress)); /* Progress color */
+   display: flex;
+   justify-content: center;
+   align-items: center;
    margin-top: 20px;
 }
 
-.circle {
-   transform: rotate(-90deg);
-}
-
-.circle-bg {
-   fill: none;
-   stroke: #e6e6e6;
-   stroke-width: 8;
-}
-
-.circle-progress {
-   fill: none;
-   stroke: #4caf50;
-   stroke-width: 8;
-   stroke-dasharray: 283; /* Circumference of the circle */
-   stroke-dashoffset: 283;
-   transition: stroke-dashoffset 1s ease;
+.donut-inner {
+   position: absolute;
+   width: 70px;
+   height: 70px;
+   background-color: var(--white);
+   border-radius: 50%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
 }
 
 .progress-text {
-   position: absolute;
-   top: 50%;
-   left: 50%;
-   transform: translate(-50%, -50%);
-   font-size: 18px;
+   font-size: 16px;
    font-weight: bold;
+   color: var(--black);
+}
+.inline-btn.disabled {
+   pointer-events: none;          /* Disable click */
+   opacity: 0.6;                  /* Make it look disabled */
+   cursor: not-allowed;           /* Show a "not-allowed" cursor on hover */
+   background-color: #d3d3d3;     /* Light gray background for disabled state */
+   color: #666;                   /* Darker text color for contrast */
 }
 
-/* Responsive Layout */
-@media (max-width: 768px) {
-   .courses-container {
-       justify-content: center;
-   }
+.side-bar::-webkit-scrollbar{
+   width: 1rem;
+   height: .5rem;
+}
+
+.side-bar::-webkit-scrollbar-track{
+   background-color: transparent;
+}
+
+.side-bar::-webkit-scrollbar-thumb{
+   background-color: var(--main-color);
 }

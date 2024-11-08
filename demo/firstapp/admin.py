@@ -44,9 +44,9 @@ admin.site.register(Question, QuestionAdmin)
 
 # Register the CourseEnrollment model
 class CourseEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('user', 'course', 'enrolled_at', 'completed_at', 'progress', 'is_completed')
+    list_display = ('user', 'course', 'enrolled_at', 'progress')
     search_fields = ('user__email', 'course__title')
-    list_filter = ('course', 'is_completed')
+    list_filter = ('course',)
 
 admin.site.register(CourseEnrollment, CourseEnrollmentAdmin)
 
