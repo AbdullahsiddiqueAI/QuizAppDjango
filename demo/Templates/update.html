@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block staticfile %}
+{% load static %}
+{% endblock staticfile %}
+{% block title %}Update Details{% endblock %}
+
+{% block content %}
+<section class="form-container">
+   <form action="" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <h3>Update Profile</h3>
+
+      <!-- Full Name -->
+      <p>Update Name</p>
+      <input type="text" name="name" placeholder="Usman Ahmed" maxlength="50" class="box" value="{{ user.full_name }}">
+
+      <!-- Email -->
+      <p>Update Email</p>
+      <input type="email" name="email" placeholder="usmanahmed@gmail.com" maxlength="50" class="box" value="{{ user.email }}">
+
+      <!-- Password Fields -->
+      <p>Previous Password</p>
+      <input type="password" name="old_pass" placeholder="Enter your old password" maxlength="20" class="box">
+      <p>New Password</p>
+      <input type="password" name="new_pass" placeholder="Enter your new password" maxlength="20" class="box">
+      <p>Confirm Password</p>
+      <input type="password" name="c_pass" placeholder="Confirm your new password" maxlength="20" class="box">
+
+      <!-- Profile Image -->
+      <p>Update Profile Picture</p>
+      <input type="file" name="profile_image" accept="image/*" class="box">
+
+      <!-- Submit Button -->
+      <input type="submit" value="Update Profile" name="submit" class="btn">
+   </form>
+</section>
+{% endblock %}

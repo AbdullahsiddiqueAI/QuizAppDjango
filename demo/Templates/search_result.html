@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block staticfile %}
+{% load static %}
+
+{% endblock staticfile %}
+{% block title %}Search Result{% endblock %}
+
+{% block content %}
+    <h2>Search Results for "{{ query }}"</h2>
+
+    {% if courses %}
+        <ul>
+            {% for course in courses %}
+                <li><a href="{% url 'course_detail' course.id %}">{{ course.HTML }}</a></li>
+                <li><a href="{% url 'course_detail' course.id %}">{{ course.CSS }}</a></li>
+                <li><a href="{% url 'course_detail' course.id %}">{{ course.JS }}</a></li>
+                <li><a href="{% url 'course_detail' course.id %}">{{ course.SASS }}</a></li>
+                
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No courses found matching your search.</p>
+    {% endif %}
+
+
+
+
+{%endblock%}

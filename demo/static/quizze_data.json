@@ -1,0 +1,19 @@
+{
+    "quizzes": {
+      "html": [
+        {
+          "question": "What does HTML stand for?",
+          "choices": ["Hyper Text Markup Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language"],
+          "correct": 0
+        }
+      ],
+      "css": [
+        {
+          "question": "What does CSS stand for?",
+          "choices": ["Creative Style Sheets", "Cascading Style Sheets", "Computer Style Sheets"],
+          "correct": 1
+        }
+      ]
+    }
+  }
+  

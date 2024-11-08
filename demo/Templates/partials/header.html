@@ -1,0 +1,45 @@
+{% load static %}
+
+<header class="header {% if not user.is_authenticated %}full-width{% endif %}">
+   <section class="flex">
+      <a href="{% url 'home' %}" class="logo">Learning Management System</a>
+
+      {% if user.is_authenticated %}
+      <form action="" method="post" class="search-form">
+         {% csrf_token %}
+         <input type="text" name="search_box" required placeholder="search courses..." maxlength="100">
+         <button type="submit" class="fas fa-search"></button>
+      </form>
+      {% endif %}
+
+      <div class="icons">
+         {% if user.is_authenticated %}
+            <div id="menu-btn" class="fas fa-bars"></div>
+            <div id="search-btn" class="fas fa-search"></div>
+         {% endif %}
+         <div id="user-btn" class="fas fa-user"></div>
+         <div id="toggle-btn" class="fas fa-sun"></div>
+      </div>
+
+      <div class="profile">
+         {% if user.is_authenticated %}
+            <!-- Show profile details for authenticated users -->
+            <img src="{{ user.profile_image.url }}" class="image" alt="Profile image">
+
+            <h3 class="name">{{ user.full_name }}</h3>
+            <p class="role">student</p>
+            <a href="{% url 'profile' %}" class="btn">view profile</a>
+            <div class="flex-btn">
+               <a href="{% url 'logout' %}" class="option-btn">logout</a>
+            </div>
+         {% else %}
+            <!-- Show login and register buttons for unauthenticated users -->
+            <img src="{% static 'images/pic-1.jpg' %}" class="image" alt="Default profile image">
+            <div class="flex-btn">
+               <a href="{% url 'login' %}" class="option-btn">login</a>
+               <a href="{% url 'register' %}" class="option-btn">register</a>
+            </div>
+         {% endif %}
+      </div>
+   </section>
+</header>

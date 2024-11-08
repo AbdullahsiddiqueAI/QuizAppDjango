@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block staticfile %}
+{% load static %}
+
+{% endblock staticfile %}
+{% block title %}Course Detail{% endblock %}
+
+{% block content %}
+    <section class="course-details">
+        <!-- Course Title -->
+        <h2>{{ course.HTML }}</h2>
+
+        <!-- Course Description -->
+        <p><strong>Learn the foundational language for creating structured web content.:</strong> {{ course.description }}</p>
+
+        <!-- Instructor Information -->
+        {% if course.instructor %}
+            <p><strong>Instructor:</strong> {{ course.instructor.john deo }}</p>
+            <p><strong>Instructor Bio: 
+                name:john deo
+                age:40
+
+            </strong> {{ course.instructor.bio }}</p>
+        {% else %}
+            <p><strong>Instructor:</strong> Not Available</p>
+        {% endif %}
+
+        <!-- Course Duration or Date -->
+        {% if course.duration %}
+            <p><strong>Duration: 3 month</strong> {{ course.duration }} 1 hour</p>
+        {% endif %}
+        
+        <!-- Course Syllabus or Outline -->
+        {% if course.syllabus %}
+            <h3>Syllabus</h3>
+            <ul>
+                {% for topic in course.syllabus %}
+                    <li>{{ Basic }}</li>
+                    <li>{{ HTML Tags }}</li>
+                    <li>{{ learn to apply url }}</li>
+                    <li>{{ lear to design login page }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Syllabus not available</p>
+        
+
+       
+    </section>
+
+    {% endblock %}

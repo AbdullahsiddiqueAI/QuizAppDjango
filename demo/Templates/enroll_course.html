@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block staticfile %}
+{% load static %}
+
+{% endblock staticfile %}
+{% block title %}Course Enroll{% endblock %}
+
+{% block content %}
+<section class="form-container">
+
+   <form action="{% url 'enroll_course' %}" method="post" >
+       {% csrf_token %}
+      <h3>Enroll First</h3>
+      <p>your email <span>*</span></p>
+      <input type="email" name="email" placeholder="enter email" required maxlength="50" class="box">
+      <p>your password <span>*</span></p>
+      <input type="password" name="password" placeholder="enter password" required maxlength="20" class="box">
+      <p>Name<span>*</span></p>
+      <input type="Name" name="Name" placeholder="enter name" required maxlength="20" class="box">
+
+      <p>Select Course <span>*</span></p>
+      <input type="Select Course" name="Select Course" placeholder="enter course name" required maxlength="20" class="box">
+
+      <p>Starting Date<span>*</span></p>
+      <input type="Date" name="Starting Date" placeholder="Starting Date" required maxlength="20" class="box">
+
+      <input type="submit" value="Enroll New" name="submit" class="btn">
+  
+  
+     
+
+   </form>
+
+</section>
+
+
+{%endblock%}

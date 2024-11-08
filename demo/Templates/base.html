@@ -1,0 +1,52 @@
+{% load static %}
+{% block staticfiles %} 
+{% endblock staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Django Site{% endblock %}</title>
+
+    <!-- Font Awesome CDN link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
+
+    <!-- Custom CSS file link -->
+    <link rel="stylesheet" href="{% static 'css/styless.css' %}">
+</head>
+<body class="{% if not user.is_authenticated %}active{% endif %}">
+
+    <!-- Header -->
+    {% include "partials/header.html" %}
+    {% include "partials/sidebar.html" %}
+
+    <!-- Messages -->
+   <!-- Messages -->
+   <div class="messages">
+    {% if messages %}
+        {% for message in messages %}
+            {% if forloop.first %}
+                <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</div>
+
+
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% include "partials/footer.html" %}
+
+    <!-- JavaScript files -->
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
