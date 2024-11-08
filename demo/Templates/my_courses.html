@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}My Courses{% endblock %}
+
+{% block content %}
+<section class="courses">
+
+    <h1 class="heading">My courses</h1>
+    <section class="box-container">
+        {% if enrolled_courses %}
+            <div class="course-list">
+                {% for enrollment in enrolled_courses %}
+                    <div class="course-card box">
+                        <!-- Course Image -->
+                        <div class="course-image">
+                            <img src="{{ enrollment.course.thumbnail_image.url }}" alt="Course Image">
+                        </div>
+    
+                        <!-- Course Title and Progress -->
+                        <div class="course-info">
+                            <div class="info">
+                                <!-- <h3>{{ course.tutor_name }}</h3>
+                                <span>{{ course.date }}</span> -->
+                               <h3>
+                                   
+                                   <a href="{% url 'course_detail' enrollment.course.id %}" class="course-title">{{ enrollment.course.title | upper }}</a>
+                            </h3> 
+                                <h3 class="course-progress">Progress: {{ enrollment.progress }}%</h3>
+                             </div>
+    
+                            <!-- Circular Progress Bar -->
+                            <div class="progress-circle" data-progress="{{ enrollment.progress }}">
+                                <svg class="circle" width="100" height="100">
+                                    <circle cx="50" cy="50" r="45" class="circle-bg"></circle>
+                                    <circle cx="50" cy="50" r="45" class="circle-progress"></circle>
+                                </svg>
+                                <div class="progress-text">{{ enrollment.progress }}%</div>
+                            </div>
+                            <a href="{% url 'course_playlist' enrollment.course.id %}" class="inline-btn" style="width:auto;">View Playlist</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <h1 style="height:100vh;font-size:30px">You are not enrolled in any courses yet.</h1>
+        {% endif %}
+    </section>
+</section>
+{% endblock %}

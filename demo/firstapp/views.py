@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.conf import settings
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
@@ -7,8 +7,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash 
 from django.contrib.auth.hashers import check_password
 
-from .models import CustomUser
-
+from django.http import JsonResponse
+from .models import *
+def index(request):
+    # Redirect to 'home' view
+    return redirect('home')
+@login_required
 def home(request):            
     return render(request, 'home.html')
 
@@ -91,9 +95,10 @@ def register(request):
         return redirect("home")
 
     return render(request, "register.html")
-
+@login_required
 def courses(request):
-    return render(request, 'courses.html')
+    courses = Course.objects.all()  # Fetch all courses from the database
+    return render(request, 'courses.html', {'courses': courses})
 
 @login_required
 def exam(request):
@@ -102,6 +107,19 @@ def exam(request):
 @login_required
 def playlist(request):
     return render(request, 'playlist.html')
+@login_required
+def course_playlist(request, id):
+    # Get the course by ID
+    selected_course = get_object_or_404(Course, id=id)
+    
+    # Fetch all lessons associated with the course
+    lessons = selected_course.lessons.all().order_by('order')  # Or adjust ordering based on your needs
+
+    # Render the playlist template, passing the course and lessons
+    return render(request, 'course_playlist.html', {
+        'selected_course': selected_course,
+        'lessons': lessons
+    })
 
 @login_required
 def profile(request):
@@ -124,10 +142,16 @@ def watchvideo(request):
 @login_required
 def certificate(request):
     return render(request, 'certificate.html')
-
 @login_required
-def enrollcourse(request):
-    return render(request, 'enroll_course.html')
+def watch_video(request, id):
+    # Get the specific lesson or return 404 if not found
+    lesson = get_object_or_404(Lesson, id=id)
+
+    context = {
+        'lesson': lesson,
+    }
+    return render(request, 'watch-video.html', context)
+
 
 
 
@@ -137,7 +161,20 @@ def search_result(request):
 
 @login_required
 def course_detail(request):
-    return render(request, 'course_detail.html')
+    
+    courses = Course.objects.all()
+
+    # Get the courses the user is enrolled in and extract course IDs
+    enrolled_courses_ids = CourseEnrollment.objects.filter(user=request.user).values_list('course__id', flat=True)
+
+    context = {
+        'courses': courses,
+        'enrolled_courses_ids': enrolled_courses_ids,  # List of course IDs the user is enrolled in
+    }
+
+
+    return render(request, 'course_detail.html', context)
+    # return render(request, 'course_detail.html')
 @login_required
 def logout_view(request):
     # Log out the user
@@ -201,3 +238,72 @@ def update_profile(request):
 
     # Render the form with the current user data
     return render(request, "update.html", {'user': user})
+
+
+
+@login_required
+def enroll_course_with_id(request, id):
+    # Fetch the specific course by ID
+    selected_course = get_object_or_404(Course, id=id)
+
+    # Check if the user is already enrolled in this course
+    if CourseEnrollment.objects.filter(user=request.user, course=selected_course).exists():
+        # If already enrolled, show an error message
+        messages.error(request, "You are already enrolled in this course.")
+        return redirect('my_courses')  # Redirect to the "My Courses" page or any other appropriate page
+
+    if request.method == 'POST':
+        # Get the starting date and authenticated user
+        starting_date = request.POST['starting_date']
+        user = request.user
+
+        # Create a course enrollment for the user
+        CourseEnrollment.objects.create(
+            user=user,
+            course=selected_course,
+            enrolled_at=starting_date,
+            progress=0.0
+        )
+
+        # Show a success message
+        messages.success(request, "You have successfully enrolled in the course.")
+        return redirect('my_courses')  # Redirect to the course dashboard or another page
+
+    # Render the template with the selected course only
+    return render(request, 'enroll_course.html', {
+        'selected_course': selected_course,
+        'user': request.user
+    })
+
+
+@login_required
+def enroll_course_without_id(request):
+    # Fetch all courses
+    all_courses = Course.objects.all()
+
+    if request.method == 'POST':
+        course_id = request.POST['course']
+        starting_date = request.POST['starting_date']
+        user = request.user
+
+        # Get the course by ID and create enrollment
+        course = get_object_or_404(Course, id=course_id)
+        CourseEnrollment.objects.create(
+            user=user,
+            course=course,
+            enrolled_at=starting_date,
+            progress=0.0
+        )
+        messages.success(request, "You have successfully enrolled in the course.")
+        return redirect('course_dashboard')
+
+    # Render the template with all courses
+    return render(request, 'enroll_course.html', {
+        'all_courses': all_courses,
+        'user': request.user
+    })
+@login_required
+def my_courses(request):
+    # Fetch courses where the user is enrolled
+    enrolled_courses = CourseEnrollment.objects.filter(user=request.user).select_related('course')
+    return render(request, 'my_courses.html', {'enrolled_courses': enrolled_courses})

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block staticfile %}
+  {% load static %}
+{% endblock staticfile %}
+
+{% block title %}Course Playlist - {{ selected_course.title }}{% endblock %}
+
+{% block content %}
+<section class="playlist-details">
+   <h1 class="heading">Playlist Details for {{ selected_course.title }}</h1>
+
+   <div class="row" style="display: flex;align-items: center;">
+      <div class="column" >
+         <!-- Save Playlist Button -->
+         <form action="" method="post" class="save-playlist">
+            <button type="submit"><i class="far fa-bookmark"></i> <span>Save Playlist</span></button>
+         </form>
+   
+         <!-- Thumbnail Image and Video Count -->
+         <div class="thumb" >
+            <img src="{{ selected_course.thumbnail_image.url }}" alt="{{ selected_course.title }}">
+            <span>{{ selected_course.video_count }} videos</span>
+         </div>
+      </div>
+
+      <div class="column">
+         <!-- Course Details -->
+         <div class="details">
+            <h3>{{ selected_course.title }}</h3>
+            <p>{{ selected_course.description|safe }}</p>
+         </div>
+      </div>
+   </div>
+</section>
+
+<section class="playlist-videos">
+   <h1 class="heading">Playlist Videos </h1>
+   
+
+   <div class="box-container">
+      {% for lesson in lessons %}
+         <a class="box" href="{% url 'watch_video' lesson.id %}">
+            <i class="fas fa-play"></i>
+            <img src="{{ lesson.thumbnail_image.url }}" alt="{{ lesson.title }}">
+            <h3>{{ lesson.title }}</h3>
+         </a>
+      {% endfor %}
+   </div>
+
+   <a href="/exam" class="inline-btn">Attempt Quiz</a>
+</section>
+{% endblock %}
