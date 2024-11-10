@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}My Quiz Attempts{% endblock %}
+
+{% block content %}
+<section class="quiz-attempts-section">
+    <h1 class="heading">My Quiz Attempts</h1>
+    
+    {% if attempts %}
+    <table class="attempts-table">
+        <thead>
+            <tr>
+                <th>Quiz Title</th>
+                <th>Score</th>
+                <th>Status</th>
+                <th>Attempt Date</th>
+                <th>Certificate</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attempt in attempts %}
+            <tr>
+                <td>{{ attempt.quiz.title }}</td>
+                <td>{{ attempt.score }}%</td>
+                <td>
+                    {% if attempt.is_passed %}
+                        <span class="status passed">Passed</span>
+                    {% else %}
+                        <span class="status failed">Failed</span>
+                    {% endif %}
+                </td>
+                <td>{{ attempt.completed_at|date:"Y-m-d H:i" }}</td>
+                <td>
+                    {% if attempt.is_passed %}
+                        <a href="{% url 'generate_certificate' attempt.id %}" class="inline-btn">Print Certificate</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>You have no quiz attempts yet.</p>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block stylesheet %}
+
+<style>
+    .quiz-attempts-section {
+        
+        height:100vh;
+        margin: auto;
+        padding: 2rem;
+    }
+
+    .heading {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .attempts-table {
+        font-size: 1.5rem;
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 2rem;
+    }
+
+    .attempts-table th, .attempts-table td {
+        padding: 1rem;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .attempts-table th {
+        background-color: #f4f4f4;
+        font-weight: bold;
+    }
+
+    .status.passed {
+        color: green;
+        font-weight: bold;
+    }
+
+    .status.failed {
+        color: red;
+        font-weight: bold;
+    }
+    .inline-btn {
+        padding: 0.5rem 1.5rem;
+        color: white;
+        background-color: var(--main-color);
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    
+    .inline-btn:hover {
+        background-color: darkgreen;
+    }
+</style>
+{% endblock %}

@@ -1,21 +1,48 @@
+
 {% extends "base.html" %}
 {% block staticfile %}
 {% load static %}
 
 {% endblock staticfile %}
-{% block title %}Certificate{% endblock %}
+{% block title %}Certificate of Achievement{% endblock %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'css/style2.css' %}">
+     
+{% endblock stylesheet %}
 
 {% block content %}
-<section class="certificate">
-   <h1 class="heading">Your Certificate</h1>
-   <div class="certificate-content">
-      <h1>Certificate of Completion</h1>
-      <p>This certifies that</p>
-      <h2>Usman Ahmed</h2>
-      <p>has successfully completed the exam.</p>
-      <button onclick="window.print()" class="btn">Print Certificate</button>
-   </div>
-</section>
+<div id="certificate-section" class="certificate-container">
+    
+  <!-- Title -->
+  <div class="certificate-title">Certificate of Completion </div>
 
+  <p> Presented To</p>
+  <!-- Recipient's Name -->
+  <div class="recipient-name">{{ user.full_name }}</div>
+
+  <!-- Certification Text -->
+  <div class="certificate-text">
+    This is to certify that <strong>{{ user.full_name }}</strong>  has successfully completed the  <strong id="courseName">{{ quiz_title }}</strong> course with dedication. We proudly present this certificate as a recognition of this achievement.
+  </div>
+
+  <!-- Date and Signature Section -->
+  <div class="bottom-section">
+    <!-- Date Section -->
+    <div class="date">
+      {{date}}<br>
+      <div class="date-line"></div>
+    </div>
+
+    <!-- Signature Section -->
+    <div class="signature">
+      Signature<br>
+      <div class="signature-line"></div>
+    </div>
+  </div>
+
+  
+ 
+</div>
+<button class="print-button" onclick="window.print()" style="display: flex;align-self:center;margin:auto">Print Certificate</button>
 
 {% endblock %}

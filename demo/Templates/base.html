@@ -13,7 +13,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
 
     <!-- Custom CSS file link -->
-    <link rel="stylesheet" href="{% static 'css/stylesssss.css' %}">
+    <link rel="stylesheet" href="{% static 'css/stylessssss.css' %}">
+   {% block stylesheet %}
+     
+   {% endblock stylesheet %}
 </head>
 <body class="{% if not user.is_authenticated %}active{% endif %}">
 
@@ -45,8 +48,8 @@
 
     <!-- Footer -->
     {% include "partials/footer.html" %}
-
+    {% block script %}{% endblock %}
     <!-- JavaScript files -->
-    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/scriptss.js' %}"></script>
 </body>
 </html>

@@ -76,4 +76,33 @@ document.querySelectorAll('.close-btn').forEach(button => {
    };
 });
 
+function submitQuiz(quizId,csrf_token) {
+   const answers = {};
+   
+   document.querySelectorAll(".quiz-question").forEach(question => {
+       const questionId = question.querySelector("input[type='radio']").name.replace("question", "");
+       const selectedOption = question.querySelector("input[type='radio']:checked");
+       answers[questionId] = selectedOption ? selectedOption.value : null;
+   });
+
+   fetch("/check_answers/", {
+       method: "POST",
+       headers: {
+           "Content-Type": "application/json",
+           "X-CSRFToken": `${ csrf_token }`
+       },
+       body: JSON.stringify({ quiz_id: quizId, answers: answers })
+   })
+   .then(response => response.json())
+   .then(data => {
+       const resultDiv = document.getElementById("result");
+       resultDiv.style.display = "block";
+       resultDiv.innerHTML = `Score: ${data.score}% - ${data.passed ? "Passed" : "Failed"}`;
+       
+       data.results.forEach(result => {
+           resultDiv.innerHTML += `<p>${result.question} - ${result.is_correct ? "Correct" : "Incorrect"}</p>`;
+       });
+   })
+   .catch(error => console.error("Error:", error));
+}
 

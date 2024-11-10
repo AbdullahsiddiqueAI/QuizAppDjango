@@ -9,6 +9,7 @@ from django.contrib.auth.hashers import check_password
 
 from django.http import JsonResponse
 from .models import *
+import json
 def index(request):
     # Redirect to 'home' view
     return redirect('home')
@@ -346,3 +347,86 @@ def quiz_detail(request, quiz_id):
         return redirect('course_detail', course_id=quiz.course.id)  # Redirect to course detail or playlist
 
     return render(request, 'quiz_detail.html', {'quiz': quiz})
+
+# @login_required
+# def Quiz(request):
+#     return render(request, 'quiz.html')
+
+@login_required
+def quiz_view(request, Course_id):
+    course=Course.objects.filter(id=Course_id).first()
+    quiz = get_object_or_404(Quiz, course=course)
+    questions = quiz.questions.all()
+    return render(request, 'quizs.html', {'quiz': quiz, 'questions': questions})
+
+@login_required
+def check_answers(request):
+    if request.method == 'POST':
+        # Parse JSON data from POST
+        data = json.loads(request.body)
+        quiz_id = data.get("quiz_id")
+        answers = data.get("answers")
+
+        quiz = get_object_or_404(Quiz, id=quiz_id)
+        questions = quiz.questions.all()
+
+        correct_count = 0
+        results = []
+
+        # Check answers
+        for question in questions:
+            user_answer = answers.get(str(question.id))
+            correct = (user_answer == f"option_{question.correct_option}")
+            results.append({
+                "question": question.text,
+                "user_answer": user_answer,
+                "correct_answer": f"option_{question.correct_option}",
+                "is_correct": correct,
+            })
+            if correct:
+                correct_count += 1
+
+        score_percentage = (correct_count / len(questions)) * 100
+        passed = score_percentage >= quiz.pass_percentage
+
+        # Record the attempt
+        QuizAttempt.objects.create(user=request.user, quiz=quiz, score=score_percentage)
+
+        return JsonResponse({
+            "results": results,
+            "score": score_percentage,
+            "passed": passed,
+        })
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)
+
+
+
+@login_required
+def quiz_attempts(request):
+    # Retrieve all quiz attempts for the logged-in user
+    attempts = QuizAttempt.objects.filter(user=request.user).select_related('quiz').order_by('-completed_at')
+    
+    context = {
+        'attempts': attempts
+    }
+    
+    return render(request, 'quiz_attempts.html', context)
+
+
+@login_required
+def generate_certificate(request, attempt_id):
+    # Get the specific quiz attempt and check if the user has passed it
+    attempt = get_object_or_404(QuizAttempt, id=attempt_id, user=request.user)
+
+    if not attempt.is_passed():
+        return render(request, 'error.html', {'message': 'You must pass the quiz to view the certificate.'})
+
+    # Render the certificate template with the attempt data
+    context = {
+        'attempt': attempt,
+        'user': request.user,
+        'date': attempt.completed_at.date(),
+        'quiz_title': attempt.quiz.course.title
+    }
+    return render(request, 'certificate.html', context)

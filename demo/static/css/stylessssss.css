@@ -1518,7 +1518,7 @@ body.active {
 }
 
 .side-bar::-webkit-scrollbar{
-   width: 1rem;
+   width: 0rem;
    height: .5rem;
 }
 
@@ -1527,5 +1527,45 @@ body.active {
 }
 
 .side-bar::-webkit-scrollbar-thumb{
+   background-color: transparent;
+}
+
+
+
+/* Quiz question styling */
+.quiz-question {
+   font-size: 2rem;
+   color: var(--black);
+   margin-bottom: 1rem;
+}
+
+/* Options container styling */
+.quiz-options {
+   display: flex;
+   flex-direction: column;
+   gap: 1rem;
+   margin-top: 1rem;
+}
+
+/* Option styling */
+.option {
+   display: flex;
+   align-items: center;
+   font-size: 1.8rem;
+   color: var(--black);
+   background-color: var(--light-bg);
+   padding: 1rem 1.5rem;
+   border-radius: .5rem;
+   cursor: pointer;
+   transition: background-color 0.2s ease;
+}
+
+.option input[type="radio"] {
+   margin-right: 1rem;
+   accent-color: var(--main-color); /* Customize radio button color */
+}
+
+.option:hover {
    background-color: var(--main-color);
+   color: var(--white);
 }

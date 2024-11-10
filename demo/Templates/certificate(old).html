@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block staticfile %}
+{% load static %}
+
+{% endblock staticfile %}
+{% block title %}Certificate{% endblock %}
+
+{% block content %}
+<section class="certificate">
+   <h1 class="heading">Your Certificate</h1>
+   <div class="certificate-content">
+      <h1>Certificate of Completion</h1>
+      <p>This certifies that</p>
+      <h2>Usman Ahmed</h2>
+      <p>has successfully completed the exam.</p>
+      <button onclick="window.print()" class="btn">Print Certificate</button>
+   </div>
+</section>
+
+
+{% endblock %}

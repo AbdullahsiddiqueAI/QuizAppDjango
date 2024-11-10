@@ -1,0 +1,111 @@
+/* General Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Container Styling */
+  .certificate-container {
+    width: 800px;
+    height: 600px;
+    border: 10px solid #9e4caf; /* Certificate border color */
+    padding: 40px;
+    margin: 50px auto;
+    background-color: #f9f9f9;
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Title Styling */
+  .certificate-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  
+  /* Recipient Name Styling */
+  .recipient-name {
+    font-size: 28px;
+    font-weight: bold;
+    color: #000;
+    margin: 20px 0;
+  }
+  
+  /* Certificate Text */
+  .certificate-text {
+    font-size: 18px;
+    color: #555;
+    margin: 20px 0;
+    line-height: 1.5;
+  }
+  
+  /* Date and Signature Styling */
+  .bottom-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 100px;
+  }
+  
+  .date, .signature {
+    font-size: 16px;
+    color: #555;
+  }
+  
+  .signature-line, .date-line {
+    border-top: 1px solid #555;
+    width: 200px;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+
+  .print-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #9d45a0; /* Green color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    margin-top: 60px;
+  }
+  
+  .print-button:hover {
+    background-color: #9d45a0; /* Darker green on hover */
+  }
+  
+  .print-button:active {
+    background-color: #9d45a0; /* Even darker on click */
+  }
+
+
+  .certificate-logo {
+    width: 100px; /* Adjust based on desired logo size */
+    height: auto;
+    margin-bottom: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  @media print {
+    /* Hide everything except the certificate section */
+    body * {
+        visibility: hidden;
+    }
+    #certificate-section, #certificate-section * {
+        visibility: visible;
+    }
+    #certificate-section {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+}

@@ -35,8 +35,12 @@ urlpatterns = [
     path(r'search_result/', views.search_result, name='search_result'),
     path(r'course_detail/', views.course_detail, name='course_detail'),
     path('course_detail/<int:id>/', views.course_detail, name='course_detail'),
+    path('Quiz/', views.Quiz, name='Quiz'),
+    path("quiz/<int:Course_id>/", views.quiz_view, name="quiz_view"),
+    path("check_answers/", views.check_answers, name="check_answers"),
 
-
+path('quiz_attempts/', views.quiz_attempts, name='quiz_attempts'),
+ path('generate_certificate/<int:attempt_id>/', views.generate_certificate, name='generate_certificate'),
 
 ]
     
