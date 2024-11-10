@@ -33,6 +33,9 @@
                 <td>
                     {% if attempt.is_passed %}
                         <a href="{% url 'generate_certificate' attempt.id %}" class="inline-btn">Print Certificate</a>
+                    {% else %}
+                        <a href="javascript:void(0);" class="inline-btn disabled" aria-disabled="true">Print Certificate</a>
+                        
                     {% endif %}
                 </td>
             </tr>
@@ -60,12 +63,16 @@
         font-size: 2.5rem;
         margin-bottom: 2rem;
     }
+    .attempts-table th{
+        color: black;
+    }
 
     .attempts-table {
         font-size: 1.5rem;
         width: 100%;
         border-collapse: collapse;
         margin-bottom: 2rem;
+        color: var(--black) !important;
     }
 
     .attempts-table th, .attempts-table td {
@@ -95,9 +102,6 @@
         border-radius: 5px;
         text-decoration: none;
     }
-    
-    .inline-btn:hover {
-        background-color: darkgreen;
-    }
+  
 </style>
 {% endblock %}

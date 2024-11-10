@@ -24,8 +24,13 @@
       <div class="profile">
          {% if user.is_authenticated %}
             <!-- Show profile details for authenticated users -->
-            <img src="{{ user.profile_image.url }}" class="image" alt="Profile image">
+             {% if user.profile_image %}
+               
+             <img src="{{ user.profile_image.url }}" class="image" alt="Profile image">
+             {% else %}
 
+             <img src="{% static 'images/pic-2.jpg'%}" class="image" alt="Profile image">
+             {% endif %}
             <h3 class="name">{{ user.full_name }}</h3>
             <p class="role">student</p>
             <a href="{% url 'profile' %}" class="btn">view profile</a>

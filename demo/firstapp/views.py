@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash 
 from django.contrib.auth.hashers import check_password
@@ -60,9 +61,11 @@ def Login(request):
     # Render the login page with any existing messages
     return render(request, 'login.html')
 
+import re  # Add this import for regular expression support
+
 def register(request):
     if request.method == "POST":
-        full_name = request.POST.get("full_name")  # Get the full name
+        full_name = request.POST.get("full_name")  
         email = request.POST.get("email")
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
@@ -75,14 +78,19 @@ def register(request):
             messages.error(request, "Passwords do not match.")
             return redirect("register")
 
+        # Password validation
+        if len(password) < 8 or not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+            messages.error(request, "Password must be at least 8 characters long and contain at least one special character.")
+            return redirect("register")
+
         # Check if the email already exists
         if CustomUser.objects.filter(email=email).exists():
             messages.error(request, "Email already exists.")
             return redirect("register")
 
-        # Create the user with the full name
+        # Create the user
         user = CustomUser.objects.create_user(
-            full_name=full_name,  # Save the full name in the user profile
+            full_name=full_name,  
             email=email,
             password=password,
             city=city,
@@ -96,6 +104,7 @@ def register(request):
         return redirect("home")
 
     return render(request, "register.html")
+
 @login_required
 def courses(request):
     courses = Course.objects.all()  # Fetch all courses from the database
@@ -108,25 +117,30 @@ def exam(request):
 @login_required
 def playlist(request):
     return render(request, 'playlist.html')
+
 @login_required
 def course_playlist(request, id):
     # Get the course by ID
     selected_course = get_object_or_404(Course, id=id)
-    progress=0
-    if CourseEnrollment.objects.filter(user=request.user, course=selected_course).first():
-        progress=CourseEnrollment.objects.filter(user=request.user, course=selected_course).first().progress
-    
-    
-    # Fetch all lessons associated with the course
-    lessons = selected_course.lessons.all().order_by('order')  # Or adjust ordering based on your needs
 
-    # Render the playlist template, passing the course and lessons
+    # Check user enrollment and calculate progress
+    enrollment = CourseEnrollment.objects.filter(user=request.user, course=selected_course).first()
+    progress = enrollment.progress if enrollment else 0
+
+    # Retrieve all lessons associated with the course
+    lessons = selected_course.lessons.all().order_by('order')
+
+    # Get the quiz related to the course and count the user's attempts
+    quiz = Quiz.objects.filter(course=selected_course).first()
+    attempt_count = QuizAttempt.objects.filter(user=request.user, quiz=quiz).count() if quiz else 0
+
+    # Render the playlist template, passing all necessary data
     return render(request, 'course_playlist.html', {
         'selected_course': selected_course,
         'lessons': lessons,
-        "progress": progress,
+        'progress': progress,
+        'attempt_count': attempt_count,
     })
- 
 @login_required
 def profile(request):
     return render(request, 'profile.html', {'user': request.user})
@@ -348,14 +362,36 @@ def quiz_detail(request, quiz_id):
 
     return render(request, 'quiz_detail.html', {'quiz': quiz})
 
-# @login_required
-# def Quiz(request):
-#     return render(request, 'quiz.html')
 
 @login_required
 def quiz_view(request, Course_id):
-    course=Course.objects.filter(id=Course_id).first()
+    # Retrieve the course and quiz
+    course = get_object_or_404(Course, id=Course_id)
     quiz = get_object_or_404(Quiz, course=course)
+
+    # Check if the user is enrolled in the course
+    enrollment = CourseEnrollment.objects.filter(user=request.user, course=course).first()
+    if not enrollment:
+        messages.error(request, "You need to be enrolled in this course to take the quiz.")
+        return redirect('course_detail', course_id=course.id)  # Redirect to course detail page
+
+    # Check if the user's progress is at least 50%
+    if enrollment.progress < 50:
+        messages.error(request, "You need to complete at least 50% of the course before attempting the quiz.")
+        return redirect('course_playlist', id=course.id)  # Redirect to course playlist or detail page
+
+    # Check if the user has already passed or reached max attempts
+    attempts = QuizAttempt.objects.filter(user=request.user, quiz=quiz)
+    if attempts.filter(score__gte=quiz.pass_percentage).exists():
+        messages.info(request, "You have already passed this quiz.")
+        return redirect(reverse('quiz_result', kwargs={'quiz_id': quiz.id}) + f"?passed=yes")
+        # return redirect('quiz_result', quiz_id=quiz.id)  # Redirect to quiz result page
+
+    if attempts.count() >= 3:
+        messages.error(request, "You have reached the maximum number of attempts for this quiz.")
+        return redirect('quiz_result', quiz_id=quiz.id)  # Redirect to quiz result page
+
+    # Retrieve quiz questions and render the quiz page
     questions = quiz.questions.all()
     return render(request, 'quizs.html', {'quiz': quiz, 'questions': questions})
 
@@ -430,3 +466,61 @@ def generate_certificate(request, attempt_id):
         'quiz_title': attempt.quiz.course.title
     }
     return render(request, 'certificate.html', context)
+
+
+def submit_quiz(request, quiz_id):
+    if request.method == 'POST':
+        quiz = get_object_or_404(Quiz, id=quiz_id)
+        questions = quiz.questions.all()
+        score = 0
+        total_questions = questions.count()
+
+        # Calculate the score based on the submitted answers
+        for question in questions:
+            user_answer = request.POST.get(f'question{question.id}')
+            if user_answer and int(user_answer) == question.correct_option:
+                score += 1
+
+        # Calculate the score percentage
+        score_percentage = (score / total_questions) * 100
+        passed = score_percentage >= quiz.pass_percentage
+
+        # Save the quiz attempt
+        quiz_attempt = QuizAttempt.objects.create(
+            user=request.user,
+            quiz=quiz,
+            score=score_percentage
+        )
+
+        # Redirect to the result page with the result information
+        return redirect(reverse('quiz_result', kwargs={'quiz_id': quiz.id}) + f"?passed={'yes' if passed else 'no'}")
+    return redirect('home')
+
+
+
+# views.py
+
+def quiz_result(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    quiz_attempt = QuizAttempt.objects.filter(user=request.user, quiz=quiz).last()
+    passed = request.GET.get('passed') == 'yes'
+    
+    # Calculate grade based on score
+    grade = ''
+    if quiz_attempt.score >= 90:
+        grade = 'A'
+    elif quiz_attempt.score >= 80:
+        grade = 'B'
+    elif quiz_attempt.score >= 70:
+        grade = 'C'
+    elif quiz_attempt.score >= 60:
+        grade = 'D'
+    else:
+        grade = 'F'
+    
+    return render(request, 'quiz_result.html', {
+        'quiz': quiz,
+        'quiz_attempt': quiz_attempt,
+        'passed': passed,
+        'grade': grade,
+    })

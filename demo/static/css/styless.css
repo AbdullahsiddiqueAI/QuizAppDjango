@@ -1353,6 +1353,9 @@ body.active {
 .message.error {
    background-color: #f44336; /* Red for errors */
 }
+.message.info {
+   background-color: #4e76ef; /* Red for errors */
+}
 
 
 
@@ -1569,3 +1572,5 @@ body.active {
    background-color: var(--main-color);
    color: var(--white);
 }
+
+

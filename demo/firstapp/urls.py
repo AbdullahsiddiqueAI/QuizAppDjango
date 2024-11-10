@@ -26,7 +26,7 @@ urlpatterns = [
     path(r'update/', views.update_profile, name='update_profile'),
     path(r'watch-video/', views.watchvideo, name='watch-video'),
     path(r'watch-video/<id>', views.watch_video, name='watch_video'),
-    path(r'certificate/', views.certificate, name='certiicate'),
+    # path(r'certificate/', views.certificate, name='certiicate'),
     path('enroll_course/', views.enroll_course_without_id, name='enroll_course_no_id'),  # Without ID
     path('enroll_course/<int:id>/', views.enroll_course_with_id, name='enroll_course'),  # With ID
     path('my_courses/', views.my_courses, name='my_courses'),
@@ -37,6 +37,8 @@ urlpatterns = [
     path('course_detail/<int:id>/', views.course_detail, name='course_detail'),
     path('Quiz/', views.Quiz, name='Quiz'),
     path("quiz/<int:Course_id>/", views.quiz_view, name="quiz_view"),
+       path('quiz/<int:quiz_id>/submit/', views.submit_quiz, name='submit_quiz'),
+    path('quiz/submit/<int:quiz_id>/result/', views.quiz_result, name='quiz_result'),
     path("check_answers/", views.check_answers, name="check_answers"),
 
 path('quiz_attempts/', views.quiz_attempts, name='quiz_attempts'),

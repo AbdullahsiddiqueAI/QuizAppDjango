@@ -35,8 +35,7 @@
 </section>
 
 <section class="playlist-videos">
-   <h1 class="heading">Playlist Videos </h1>
-   
+   <h1 class="heading">Playlist Videos</h1>
 
    <div class="box-container">
       {% for lesson in lessons %}
@@ -47,13 +46,16 @@
          </a>
       {% endfor %}
    </div>
- 
-   {% if progress >= 50 %}
-    <a href="{% url 'quiz_view' selected_course.id%}" class="inline-btn">Attempt Quiz</a>
-{% else %}
-    <a href="javascript:void(0);" class="inline-btn disabled" aria-disabled="true">Attempt Quiz</a>
-    <p>You need to complete at least 50% of the course to attempt the quiz.</p>
-{% endif %}
 
+   <div class="quiz-section">
+       {% if progress >= 50 %}
+           <a href="{% url 'quiz_view' selected_course.id %}" class="inline-btn">Attempt Quiz</a>
+           <h1 class="attempt-info">Attempts: {{ attempt_count }} / 3</h1>
+       {% else %}
+           <a href="javascript:void(0);" class="inline-btn disabled" aria-disabled="true">Attempt Quiz</a>
+           <p>You need to complete at least 50% of the course to attempt the quiz.</p>
+       {% endif %}
+   </div>
 </section>
+
 {% endblock %}

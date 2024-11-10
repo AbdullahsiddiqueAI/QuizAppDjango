@@ -4,32 +4,34 @@
     <h1 class="heading">{{ quiz.title }}</h1>
     
     <div class="quiz-container">
-        {% for question in questions %}
-        <div class="quiz-question">
-            <p>{{ forloop.counter }}. {{ question.text }}</p>
-            <div class="quiz-options">
-                <label class="option">
-                    <input type="radio" name="question{{ question.id }}" value="option_1"> {{ question.option_1 }}
-                </label>
-                <label class="option">
-                    <input type="radio" name="question{{ question.id }}" value="option_2"> {{ question.option_2 }}
-                </label>
-                <label class="option">
-                    <input type="radio" name="question{{ question.id }}" value="option_3"> {{ question.option_3 }}
-                </label>
-                <label class="option">
-                    <input type="radio" name="question{{ question.id }}" value="option_4"> {{ question.option_4 }}
-                </label>
+        <form action="{% url 'submit_quiz' quiz.id %}" method="post">
+            {% csrf_token %}
+            {% for question in questions %}
+            <div class="quiz-question">
+                <p>{{ forloop.counter }}. {{ question.text }}</p>
+                <div class="quiz-options">
+                    <label class="option">
+                        <input type="radio" name="question{{ question.id }}" value="1"> {{ question.option_1 }}
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="question{{ question.id }}" value="2"> {{ question.option_2 }}
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="question{{ question.id }}" value="3"> {{ question.option_3 }}
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="question{{ question.id }}" value="4"> {{ question.option_4 }}
+                    </label>
+                </div>
             </div>
-        </div>
-        {% endfor %}
-    </div>
-    
-    <div id="result" class="result hidden">Your result will appear here.</div>
-
-    <div class="button-container">
-        <button id="submit" class="inline-btn" onclick="submitQuiz({{ quiz.id }},'{{csrf_token}}')">Submit</button>
+            {% endfor %}
+            
+            <div class="button-container">
+                <button type="submit" class="inline-btn">Submit</button>
+            </div>
+        </form>
     </div>
 </section>
 {% endblock %}
 
+<!-- <button id="submit" class="inline-btn" onclick="submitQuiz({{ quiz.id }},'{{csrf_token}}')">Submit</button> -->

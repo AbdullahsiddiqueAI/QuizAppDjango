@@ -14,9 +14,15 @@
    <div class="info">
 
       <div class="user">
+         {% if  user.profile_image%}
+           
+         
          <img src="{{ user.profile_image.url }}" class="image" alt="Profile image">
          
-      
+         {% else %}
+
+         <img src="{% static 'images/pic-2.jpg'%}" class="image" alt="Profile image">
+         {% endif %}
       <h2>{{ user.email }}</h2>
          <p>student</p>
          <a href="/update" class="inline-btn">update profile</a>
