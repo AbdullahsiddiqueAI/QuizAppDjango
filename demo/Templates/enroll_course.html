@@ -6,44 +6,47 @@
 {% block title %}Course Enroll{% endblock %}
 
 {% block content %}
-<section class="form-container">
+<main>
 
-   {% if selected_course %}
-   <!-- Form for when a specific course is selected -->
-   <form action="{% url 'enroll_course' selected_course.id %}" method="post">
-   {% else %}
-   <!-- Form for when all courses are displayed for selection -->
-   <form action="{% url 'enroll_course_no_id' %}" method="post">
-   {% endif %}
-       {% csrf_token %}
-      <h3>Enroll First</h3>
-
-      <!-- Name is automatically taken from request.user -->
-      <p>Your Name <span>*</span></p>
-      <input type="text" name="full_name" value="{{ user.full_name }}" readonly class="box">
-
-      <!-- Select Course -->
-      <p>Select Course <span>*</span></p>
-      <select name="course" class="box" required>
-         {% if selected_course %}
-            <!-- Display the pre-selected course -->
-            <option value="{{ selected_course.id }}" selected>{{ selected_course.title }}</option>
-         {% else %}
-            <!-- Show all courses if no specific course is selected -->
-            <option value="" disabled selected>Select a course</option>
-            {% for course in all_courses %}
-               <option value="{{ course.id }}">{{ course.title }}</option>
-            {% endfor %}
-         {% endif %}
-      </select>
-
-      <!-- Starting Date Input -->
-      <p>Starting Date <span>*</span></p>
-      <input type="date" name="starting_date" required class="box">
-
-      <!-- Submit Button -->
-      <input type="submit" value="Enroll New" name="submit" class="btn">
-  
-   </form>
-</section>
+   <section class="form-container">
+   
+      {% if selected_course %}
+      <!-- Form for when a specific course is selected -->
+      <form action="{% url 'enroll_course' selected_course.id %}" method="post">
+      {% else %}
+      <!-- Form for when all courses are displayed for selection -->
+      <form action="{% url 'enroll_course_no_id' %}" method="post">
+      {% endif %}
+          {% csrf_token %}
+         <h3>Enroll First</h3>
+   
+         <!-- Name is automatically taken from request.user -->
+         <p>Your Name <span>*</span></p>
+         <input type="text" name="full_name" value="{{ user.full_name }}" readonly class="box">
+   
+         <!-- Select Course -->
+         <p>Select Course <span>*</span></p>
+         <select name="course" class="box" required>
+            {% if selected_course %}
+               <!-- Display the pre-selected course -->
+               <option value="{{ selected_course.id }}" selected>{{ selected_course.title }}</option>
+            {% else %}
+               <!-- Show all courses if no specific course is selected -->
+               <option value="" disabled selected>Select a course</option>
+               {% for course in all_courses %}
+                  <option value="{{ course.id }}">{{ course.title }}</option>
+               {% endfor %}
+            {% endif %}
+         </select>
+   
+         <!-- Starting Date Input -->
+         <p>Starting Date <span>*</span></p>
+         <input type="date" name="starting_date" required class="box">
+   
+         <!-- Submit Button -->
+         <input type="submit" value="Enroll New" name="submit" class="btn">
+     
+      </form>
+   </section>
+</main>
 {% endblock %}

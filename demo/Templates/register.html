@@ -5,46 +5,48 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
+<main class="register-img">
 
-<section class="form-container">
-
-   <form action="" method="POST" enctype="multipart/form-data">
-      {% csrf_token %}
-      <h3>Register Now</h3>
-
-      <!-- Full Name Field -->
-      <p>Your Full Name <span>*</span></p>
-      <input type="text" name="full_name" placeholder="Enter your full name" required maxlength="100" class="box">
-
-      <!-- Email Field -->
-      <p>Your Email <span>*</span></p>
-      <input type="email" name="email" placeholder="Enter your email" required maxlength="50" class="box">
-
-      <!-- Password Field -->
-      <p>Your Password <span>*</span></p>
-      <input type="password" name="password" placeholder="Enter your password" required maxlength="20" class="box">
-
-      <!-- Confirm Password Field -->
-      <p>Confirm Password <span>*</span></p>
-      <input type="password" name="confirm_password" placeholder="Confirm your password" required maxlength="20" class="box">
-
-      <!-- City Field -->
-      <p>Enter Your City <span>*</span></p>
-      <input type="text" name="city" placeholder="City" required maxlength="50" class="box">
-
-      <!-- Phone Number Field -->
-      <p>Enter Your Phone Number <span>*</span></p>
-      <input type="text" name="phone_number" placeholder="Your phone number" required maxlength="20" class="box">
-
-      <!-- Profile Image Upload -->
-      <p>Select Profile Image <span></span></p>
-      <input type="file" name="profile_image" accept="image/*" class="box">
-
-      <!-- Submit Button -->
-      <input type="submit" value="Register Now" name="submit" class="btn">
-      <p>Already have an account? <a href="/login/">Login</a></p>
-   </form>
-
-</section>
+   <section class="form-container" >
+   
+      <form action="" method="POST" enctype="multipart/form-data">
+         {% csrf_token %}
+         <h3>Register Now</h3>
+   
+         <!-- Full Name Field -->
+         <p>Your Full Name <span>*</span></p>
+         <input type="text" name="full_name" placeholder="Enter your full name" required maxlength="100" class="box">
+   
+         <!-- Email Field -->
+         <p>Your Email <span>*</span></p>
+         <input type="email" name="email" placeholder="Enter your email" required maxlength="50" class="box">
+   
+         <!-- Password Field -->
+         <p>Your Password <span>*</span></p>
+         <input type="password" name="password" placeholder="Enter your password" required maxlength="20" class="box">
+   
+         <!-- Confirm Password Field -->
+         <p>Confirm Password <span>*</span></p>
+         <input type="password" name="confirm_password" placeholder="Confirm your password" required maxlength="20" class="box">
+   
+         <!-- City Field -->
+         <p>Enter Your City <span>*</span></p>
+         <input type="text" name="city" placeholder="City" required maxlength="50" class="box">
+   
+         <!-- Phone Number Field -->
+         <p>Enter Your Phone Number <span>*</span></p>
+         <input type="text" name="phone_number" placeholder="Your phone number" required maxlength="20" class="box">
+   
+         <!-- Profile Image Upload -->
+         <p>Select Profile Image <span></span></p>
+         <input type="file" name="profile_image" accept="image/*" class="box">
+   
+         <!-- Submit Button -->
+         <input type="submit" value="Register Now" name="submit" class="btn">
+         <p>Already have an account? <a href="/login/">Login</a></p>
+      </form>
+   
+   </section>
+</main>
 
 {% endblock %}

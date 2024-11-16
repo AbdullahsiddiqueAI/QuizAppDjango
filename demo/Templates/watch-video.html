@@ -6,55 +6,58 @@
 {% block title %}Watch Videos{% endblock %}
 
 {% block content %}
-<section class="watch-video">
+<main>
 
-  
-   <div class="video-container">
-      <div class="video">
-          {% if lesson.video_file %}
-              <video id="videoPlayer" src="{{ lesson.video_file.url }}" controls poster="{{ lesson.thumbnail_image.url }}" id="video" ></video>
-          {% else %}
-              <p class="video-placeholder">Video is not available at this time.</p>
-          {% endif %}
-      </div>
+   <section class="watch-video">
+   
+     
+      <div class="video-container">
+         <div class="video">
+             {% if lesson.video_file %}
+                 <video id="videoPlayer" src="{{ lesson.video_file.url }}" controls poster="{{ lesson.thumbnail_image.url }}" id="video" ></video>
+             {% else %}
+                 <p class="video-placeholder">Video is not available at this time.</p>
+             {% endif %}
+         </div>
+   
+         <h3 class="title">{{ lesson.title|default:"Title not available" }}</h3>
+   
+         <div class="info">
+             <p class="date"><i class="fas fa-calendar"></i>
+                 <span>{{ lesson.created_at|date:"d-m-Y" }}</span>
+             </p>
+             <p class="likes">
+                 <i class="fas fa-heart"></i>
+                 <span>{{ lesson.likes_count|default:"0" }} likes</span>
+             </p>
+         </div>
+   
+         <div class="tutor">
+             {% if lesson.course.tutor_image %}
+                 <img src="{{ lesson.course.tutor_image.url }}" class="image" alt="Tutor Image">
+             {% else %}
+                 <img src="{% static 'images/default-tutor.jpg' %}" class="image" alt="Default Tutor Image">
+             {% endif %}
+             <div>
+                 <h3>{{ lesson.course.tutor_name|default:"Tutor not assigned" }}</h3>
+                 <span>{{ lesson.course.tutor_role|default:"Role not available" }}</span>
+             </div>
+         </div>
+   
+         <form action="" method="post" class="flex">
+             <a href="/playlist" class="inline-btn">View Playlist</a>
+             <button><i class="far fa-heart"></i><span>Like</span></button>
+         </form>
+   
+         <p class="description">
+             {{ lesson.description|default:"Description coming soon." }}
+         </p>
+     </div>
+   
+   </section>
+</main>
 
-      <h3 class="title">{{ lesson.title|default:"Title not available" }}</h3>
-
-      <div class="info">
-          <p class="date"><i class="fas fa-calendar"></i>
-              <span>{{ lesson.created_at|date:"d-m-Y" }}</span>
-          </p>
-          <p class="likes">
-              <i class="fas fa-heart"></i>
-              <span>{{ lesson.likes_count|default:"0" }} likes</span>
-          </p>
-      </div>
-
-      <div class="tutor">
-          {% if lesson.course.tutor_image %}
-              <img src="{{ lesson.course.tutor_image.url }}" class="image" alt="Tutor Image">
-          {% else %}
-              <img src="{% static 'images/default-tutor.jpg' %}" class="image" alt="Default Tutor Image">
-          {% endif %}
-          <div>
-              <h3>{{ lesson.course.tutor_name|default:"Tutor not assigned" }}</h3>
-              <span>{{ lesson.course.tutor_role|default:"Role not available" }}</span>
-          </div>
-      </div>
-
-      <form action="" method="post" class="flex">
-          <a href="/playlist" class="inline-btn">View Playlist</a>
-          <button><i class="far fa-heart"></i><span>Like</span></button>
-      </form>
-
-      <p class="description">
-          {{ lesson.description|default:"Description coming soon." }}
-      </p>
-  </div>
-
-</section>
-
-<section class="comments">
+<!-- <section class="comments">
 
    <h1 class="heading">5 comments</h1>
 
@@ -152,7 +155,7 @@
 
    </div>
 
-</section>
+</section> -->
 
 <script>
    document.addEventListener("DOMContentLoaded", function () {

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<main>
+   <section class="courses">
+      <h1 class="heading">Search Results</h1>
+      
+      {% if courses %}
+      <div class="box-container">
+         {% for course in courses %}
+         <div class="box">
+            <div class="tutor">
+               <img src="{{ course.tutor_image.url }}" class="image" alt="{{ course.tutor_name }}">
+               <div class="info">
+                  <h3>{{ course.tutor_name }}</h3>
+                  <span>{{ course.date }}</span>
+               </div>
+            </div>
+            <div class="thumb">
+               <img src="{{ course.thumbnail_image.url }}" alt="{{ course.title }}">
+               <span>{{ course.video_count }} videos</span>
+            </div>
+            <h3 class="title">{{ course.title }}</h3>
+            <a href="{% url 'course_playlist' course.id %}" class="inline-btn">View Playlist</a>
+         </div>
+         {% endfor %}
+      </div>
+      {% else %}
+      <p class="empty">No courses found for "{{ query }}".</p>
+      {% endif %}
+   </section>
+</main>
+{% endblock %}

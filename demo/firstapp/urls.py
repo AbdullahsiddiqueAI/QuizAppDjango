@@ -10,11 +10,11 @@ urlpatterns = [
     path(r'logout/', views.logout_view, name='logout'),
     
     path(r'about/', views.about, name='about'),
-    path(r'courses/', views.courses, name='courses'),
+   #  path(r'courses/', views.courses, name='courses'),
     path(r'contact/', views.contact, name='contact'),
-    path(r'exam/', views.exam, name='exam'),
+   #  path(r'exam/', views.exam, name='exam'),
     
-    
+    path('search/', views.search_courses, name='search_courses'),
 
     # path(r'update-profile/', views.update_profile, name='update_profile'),
   

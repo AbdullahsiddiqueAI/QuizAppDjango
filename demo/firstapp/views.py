@@ -105,14 +105,7 @@ def register(request):
 
     return render(request, "register.html")
 
-@login_required
-def courses(request):
-    courses = Course.objects.all()  # Fetch all courses from the database
-    return render(request, 'courses.html', {'courses': courses})
 
-@login_required
-def exam(request):
-    return render(request, 'exam.html')
 
 @login_required
 def playlist(request):
@@ -148,8 +141,30 @@ def profile(request):
 def about(request):
     return render(request, 'about.html')
 
+def search_courses(request):
+    query = request.GET.get("search_box", "")  # Get the search term from the request
+    courses = Course.objects.filter(title__icontains=query) if query else []  # Search courses by title
+    return render(request, "search_results.html", {"courses": courses, "query": query})
 def contact(request):
-    return render(request, 'contact.html')
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        number = request.POST.get("number")
+        message = request.POST.get("message")
+
+        # Validate the data (optional, you can add more validation as needed)
+        if not name or not email or not message:
+            messages.error(request, "All fields are required.")
+            return render(request, "contact.html")
+
+        # Save the data to the database
+        Contact.objects.create(name=name, email=email, number=number, message=message)
+
+        # Add a success message
+        messages.success(request, "Your message has been sent successfully!")
+        return render(request, "contact.html")
+
+    return render(request, "contact.html")
 
 @login_required
 def update(request):

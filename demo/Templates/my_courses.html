@@ -3,43 +3,46 @@
 {% block title %}My Courses{% endblock %}
 
 {% block content %}
-<section class="courses">
+<main>
 
-    <h1 class="heading">My courses</h1>
-    <section class="box-container">
-        {% if enrolled_courses %}
-            <div class="course-list">
-                {% for enrollment in enrolled_courses %}
-                    <div class="course-card box">
-                        <!-- Course Image -->
-                        <div class="course-image">
-                            <img src="{{ enrollment.course.thumbnail_image.url }}" alt="Course Image">
-                        </div>
+    <section class="courses">
     
-                        <!-- Course Title and Progress -->
-                        <div class="course-info">
-                            <h3>
-                                <a href="{% url 'course_detail' enrollment.course.id %}" class="course-title">{{ enrollment.course.title | upper }}</a>
-                            </h3> 
-                            <h3 class="course-progress">Progress: {{ enrollment.progress |floatformat:0 }}%</h3>
-    
-                            <!-- Circular Progress Bar -->
-                            <div class="donut-chart" style="--progress: {{ enrollment.progress }}%;">
-                                <div class="donut-inner">
-                                    <span class="progress-text">{{ enrollment.progress |floatformat:0}}%</span>
-                                </div>
+        <h1 class="heading">My courses</h1>
+        <section class="box-container">
+            {% if enrolled_courses %}
+                <div class="course-list">
+                    {% for enrollment in enrolled_courses %}
+                        <div class="course-card box">
+                            <!-- Course Image -->
+                            <div class="course-image">
+                                <img src="{{ enrollment.course.thumbnail_image.url }}" alt="Course Image">
                             </div>
-    
-                            <a href="{% url 'course_playlist' enrollment.course.id %}" class="inline-btn" style="width:auto;">View Playlist</a>
+        
+                            <!-- Course Title and Progress -->
+                            <div class="course-info">
+                                <h3>
+                                    <a href="{% url 'course_detail' enrollment.course.id %}" class="course-title">{{ enrollment.course.title | upper }}</a>
+                                </h3> 
+                                <h3 class="course-progress">Progress: {{ enrollment.progress |floatformat:0 }}%</h3>
+        
+                                <!-- Circular Progress Bar -->
+                                <div class="donut-chart" style="--progress: {{ enrollment.progress }}%;">
+                                    <div class="donut-inner">
+                                        <span class="progress-text">{{ enrollment.progress |floatformat:0}}%</span>
+                                    </div>
+                                </div>
+        
+                                <a href="{% url 'course_playlist' enrollment.course.id %}" class="inline-btn" style="width:auto;">View Playlist</a>
+                            </div>
                         </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <h1 style="height:100vh; font-size:30px;">You are not enrolled in any courses yet.</h1>
-        {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <h1 style="height:100vh; font-size:30px;">You are not enrolled in any courses yet.</h1>
+            {% endif %}
+        </section>
     </section>
-</section>
+</main>
 
 {% endblock %}
 

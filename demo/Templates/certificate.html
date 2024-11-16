@@ -11,38 +11,41 @@
 {% endblock stylesheet %}
 
 {% block content %}
-<div id="certificate-section" class="certificate-container">
-    
-  <!-- Title -->
-  <div class="certificate-title">Certificate of Completion </div>
+<main>
 
-  <p> Presented To</p>
-  <!-- Recipient's Name -->
-  <div class="recipient-name">{{ user.full_name }}</div>
-
-  <!-- Certification Text -->
-  <div class="certificate-text">
-    This is to certify that <strong>{{ user.full_name }}</strong>  has successfully completed the  <strong id="courseName">{{ quiz_title }}</strong> course with dedication. We proudly present this certificate as a recognition of this achievement.
-  </div>
-
-  <!-- Date and Signature Section -->
-  <div class="bottom-section">
-    <!-- Date Section -->
-    <div class="date">
-      {{date}}<br>
-      <div class="date-line"></div>
-    </div>
-
-    <!-- Signature Section -->
-    <div class="signature">
-      Signature<br>
-      <div class="signature-line"></div>
-    </div>
-  </div>
-
+  <div id="certificate-section" class="certificate-container">
+      
+    <!-- Title -->
+    <div class="certificate-title">Certificate of Completion </div>
   
- 
-</div>
-<button class="print-button" onclick="window.print()" style="display: flex;align-self:center;margin:auto">Print Certificate</button>
+    <p> Presented To</p>
+    <!-- Recipient's Name -->
+    <div class="recipient-name">{{ user.full_name }}</div>
+  
+    <!-- Certification Text -->
+    <div class="certificate-text">
+      This is to certify that <strong>{{ user.full_name }}</strong>  has successfully completed the  <strong id="courseName">{{ quiz_title }}</strong> course with dedication. We proudly present this certificate as a recognition of this achievement.
+    </div>
+  
+    <!-- Date and Signature Section -->
+    <div class="bottom-section">
+      <!-- Date Section -->
+      <div class="date">
+        {{date}}<br>
+        <div class="date-line"></div>
+      </div>
+  
+      <!-- Signature Section -->
+      <div class="signature">
+        Signature<br>
+        <div class="signature-line"></div>
+      </div>
+    </div>
+  
+    
+   
+  </div>
+  <button class="print-button" onclick="window.print()" style="display: flex;align-self:center;margin:auto">Print Certificate</button>
+</main>
 
 {% endblock %}

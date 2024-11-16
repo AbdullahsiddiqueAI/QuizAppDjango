@@ -2,57 +2,60 @@
 {% block title %}Quiz Result{% endblock %}
 
 {% block content %}
-<div class="result-container">
+<main>
 
-    <h1 class="result-title">Student Result</h1>
-      
-    <!-- Student Information -->
+    <div class="result-container">
     
-    <div class="student-info">
-        <label for="studentName" class="underline">Student Name:</label>
-        <span id="studentName">
-            {% if request.user.full_name %}
-                {{ request.user.full_name }}
+        <h1 class="result-title">Student Result</h1>
+          
+        <!-- Student Information -->
+        
+        <div class="student-info">
+            <label for="studentName" class="underline">Student Name:</label>
+            <span id="studentName">
+                {% if request.user.full_name %}
+                    {{ request.user.full_name }}
+                {% else %}
+                    {{ request.user.email }}
+                {% endif %}
+            </span>
+          </div>
+          
+      
+        <div class="result-info">
+            <label for="Quiz" class="underline">Quiz Name:</label>
+            <span id="Quiz">{{ quiz.title }}</span>
+        </div>
+        <!-- Result Information -->
+        <div class="result-info">
+          <label for="percentage" class="underline">Percentage:</label>
+          <span id="percentage">{{ quiz_attempt.score }}%</span>
+        </div>
+      
+        <div class="result-info">
+          <label for="grade" class="underline">Grade:</label>
+          <span id="grade">{{ grade }}</span>
+        </div>
+        
+        {% if passed %}
+            <p>Congratulations! You passed the quiz.</p>
+            <button class="print-button" onclick="printCertificate()">Print Certificate</button>
+            <script>
+                function printCertificate() {
+                    window.location.href = "{% url 'generate_certificate' quiz_attempt.id %}";
+                }
+            </script>
             {% else %}
-                {{ request.user.email }}
-            {% endif %}
-        </span>
-      </div>
-      
-  
-    <div class="result-info">
-        <label for="Quiz" class="underline">Quiz Name:</label>
-        <span id="Quiz">{{ quiz.title }}</span>
+            <p>Sorry, you did not pass the quiz. Try again!</p>
+            <button class="print-button" onclick="Retry()">Retry</button>
+            <script>
+                function Retry() {
+                    window.location.href = "{% url 'quiz_view' quiz.course.id %}";
+                }
+            </script>
+        {% endif %}
     </div>
-    <!-- Result Information -->
-    <div class="result-info">
-      <label for="percentage" class="underline">Percentage:</label>
-      <span id="percentage">{{ quiz_attempt.score }}%</span>
-    </div>
-  
-    <div class="result-info">
-      <label for="grade" class="underline">Grade:</label>
-      <span id="grade">{{ grade }}</span>
-    </div>
-    
-    {% if passed %}
-        <p>Congratulations! You passed the quiz.</p>
-        <button class="print-button" onclick="printCertificate()">Print Certificate</button>
-        <script>
-            function printCertificate() {
-                window.location.href = "{% url 'generate_certificate' quiz_attempt.id %}";
-            }
-        </script>
-        {% else %}
-        <p>Sorry, you did not pass the quiz. Try again!</p>
-        <button class="print-button" onclick="Retry()">Retry</button>
-        <script>
-            function Retry() {
-                window.location.href = "{% url 'quiz_view' quiz.course.id %}";
-            }
-        </script>
-    {% endif %}
-</div>
+</main>
 {% endblock %}
 
 {% block stylesheet %}

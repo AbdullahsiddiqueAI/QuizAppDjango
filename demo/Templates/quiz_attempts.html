@@ -3,49 +3,52 @@
 {% block title %}My Quiz Attempts{% endblock %}
 
 {% block content %}
-<section class="quiz-attempts-section">
-    <h1 class="heading">My Quiz Attempts</h1>
-    
-    {% if attempts %}
-    <table class="attempts-table">
-        <thead>
-            <tr>
-                <th>Quiz Title</th>
-                <th>Score</th>
-                <th>Status</th>
-                <th>Attempt Date</th>
-                <th>Certificate</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for attempt in attempts %}
-            <tr>
-                <td>{{ attempt.quiz.title }}</td>
-                <td>{{ attempt.score }}%</td>
-                <td>
-                    {% if attempt.is_passed %}
-                        <span class="status passed">Passed</span>
-                    {% else %}
-                        <span class="status failed">Failed</span>
-                    {% endif %}
-                </td>
-                <td>{{ attempt.completed_at|date:"Y-m-d H:i" }}</td>
-                <td>
-                    {% if attempt.is_passed %}
-                        <a href="{% url 'generate_certificate' attempt.id %}" class="inline-btn">Print Certificate</a>
-                    {% else %}
-                        <a href="javascript:void(0);" class="inline-btn disabled" aria-disabled="true">Print Certificate</a>
-                        
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>You have no quiz attempts yet.</p>
-    {% endif %}
-</section>
+<main>
+
+    <section class="quiz-attempts-section">
+        <h1 class="heading">My Quiz Attempts</h1>
+        
+        {% if attempts %}
+        <table class="attempts-table">
+            <thead>
+                <tr>
+                    <th>Quiz Title</th>
+                    <th>Score</th>
+                    <th>Status</th>
+                    <th>Attempt Date</th>
+                    <th>Certificate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attempt in attempts %}
+                <tr>
+                    <td>{{ attempt.quiz.title }}</td>
+                    <td>{{ attempt.score }}%</td>
+                    <td>
+                        {% if attempt.is_passed %}
+                            <span class="status passed">Passed</span>
+                        {% else %}
+                            <span class="status failed">Failed</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ attempt.completed_at|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        {% if attempt.is_passed %}
+                            <a href="{% url 'generate_certificate' attempt.id %}" class="inline-btn">Print Certificate</a>
+                        {% else %}
+                            <a href="javascript:void(0);" class="inline-btn disabled" aria-disabled="true">Print Certificate</a>
+                            
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>You have no quiz attempts yet.</p>
+        {% endif %}
+    </section>
+</main>
 {% endblock %}
 
 {% block stylesheet %}

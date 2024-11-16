@@ -5,12 +5,11 @@
       <a href="{% url 'home' %}" class="logo">Learning Management System</a>
 
       {% if user.is_authenticated %}
-      <form action="" method="post" class="search-form">
-         {% csrf_token %}
-         <input type="text" name="search_box" required placeholder="search courses..." maxlength="100">
-         <button type="submit" class="fas fa-search"></button>
-      </form>
-      {% endif %}
+<form action="{% url 'search_courses' %}" method="get" class="search-form">
+   <input type="text" name="search_box" required placeholder="Search courses..." maxlength="100" value="{{ query|default_if_none:'' }}">
+   <button type="submit" class="fas fa-search"></button>
+</form>
+{% endif %}
 
       <div class="icons">
          {% if user.is_authenticated %}

@@ -7,55 +7,58 @@
 {% block title %}Course Playlist - {{ selected_course.title }}{% endblock %}
 
 {% block content %}
-<section class="playlist-details">
-   <h1 class="heading">Playlist Details for {{ selected_course.title }}</h1>
+<main>
 
-   <div class="row" style="display: flex;align-items: center;">
-      <div class="column" >
-         <!-- Save Playlist Button -->
-         <form action="" method="post" class="save-playlist">
-            <button type="submit"><i class="far fa-bookmark"></i> <span>Save Playlist</span></button>
-         </form>
+   <section class="playlist-details">
+      <h1 class="heading">Playlist Details for {{ selected_course.title }}</h1>
    
-         <!-- Thumbnail Image and Video Count -->
-         <div class="thumb" >
-            <img src="{{ selected_course.thumbnail_image.url }}" alt="{{ selected_course.title }}">
-            <span>{{ selected_course.video_count }} videos</span>
+      <div class="row" style="display: flex;align-items: center;">
+         <div class="column" >
+            <!-- Save Playlist Button -->
+            <form action="" method="post" class="save-playlist">
+               <button type="submit"><i class="far fa-bookmark"></i> <span>Save Playlist</span></button>
+            </form>
+      
+            <!-- Thumbnail Image and Video Count -->
+            <div class="thumb" >
+               <img src="{{ selected_course.thumbnail_image.url }}" alt="{{ selected_course.title }}">
+               <span>{{ selected_course.video_count }} videos</span>
+            </div>
+         </div>
+   
+         <div class="column">
+            <!-- Course Details -->
+            <div class="details">
+               <h3>{{ selected_course.title }}</h3>
+               <p>{{ selected_course.description|safe }}</p>
+            </div>
          </div>
       </div>
-
-      <div class="column">
-         <!-- Course Details -->
-         <div class="details">
-            <h3>{{ selected_course.title }}</h3>
-            <p>{{ selected_course.description|safe }}</p>
-         </div>
+   </section>
+   
+   <section class="playlist-videos">
+      <h1 class="heading">Playlist Videos</h1>
+   
+      <div class="box-container">
+         {% for lesson in lessons %}
+            <a class="box" href="{% url 'watch_video' lesson.id %}">
+               <i class="fas fa-play"></i>
+               <img src="{{ lesson.thumbnail_image.url }}" alt="{{ lesson.title }}">
+               <h3>{{ lesson.title }}</h3>
+            </a>
+         {% endfor %}
       </div>
-   </div>
-</section>
-
-<section class="playlist-videos">
-   <h1 class="heading">Playlist Videos</h1>
-
-   <div class="box-container">
-      {% for lesson in lessons %}
-         <a class="box" href="{% url 'watch_video' lesson.id %}">
-            <i class="fas fa-play"></i>
-            <img src="{{ lesson.thumbnail_image.url }}" alt="{{ lesson.title }}">
-            <h3>{{ lesson.title }}</h3>
-         </a>
-      {% endfor %}
-   </div>
-
-   <div class="quiz-section">
-       {% if progress >= 50 %}
-           <a href="{% url 'quiz_view' selected_course.id %}" class="inline-btn">Attempt Quiz</a>
-           <h1 class="attempt-info">Attempts: {{ attempt_count }} / 3</h1>
-       {% else %}
-           <a href="javascript:void(0);" class="inline-btn disabled" aria-disabled="true">Attempt Quiz</a>
-           <p>You need to complete at least 50% of the course to attempt the quiz.</p>
-       {% endif %}
-   </div>
-</section>
+   
+      <div class="quiz-section">
+          {% if progress >= 50 %}
+              <a href="{% url 'quiz_view' selected_course.id %}" class="inline-btn">Attempt Quiz</a>
+              <h1 class="attempt-info">Attempts: {{ attempt_count }} / 3</h1>
+          {% else %}
+              <a href="javascript:void(0);" class="inline-btn disabled" aria-disabled="true">Attempt Quiz</a>
+              <p>You need to complete at least 50% of the course to attempt the quiz.</p>
+          {% endif %}
+      </div>
+   </section>
+</main>
 
 {% endblock %}

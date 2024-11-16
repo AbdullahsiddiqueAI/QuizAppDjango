@@ -155,3 +155,12 @@ class Certificate(models.Model):
         if not self.certificate_number:
             self.certificate_number = self.generate_certificate_number()
         super().save(*args, **kwargs)
+class Contact(models.Model):
+    name = models.CharField(max_length=50)
+    email = models.EmailField(max_length=50)
+    number = models.CharField(max_length=15)
+    message = models.TextField(max_length=1000)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
